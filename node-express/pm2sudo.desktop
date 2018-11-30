@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=pm2sudo-start
+Comment=
+Exec=sudo pm2 start /home/spinmedia/Documentos/DOCKERS-SERVICE-2019/node/update.js --name updatesudo
+StartupNotify=false
+Terminal=false
+Hidden=false
+Name[es_ES]=pm2sudo-start.desktop

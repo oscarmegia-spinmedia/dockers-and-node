@@ -1,0 +1,58 @@
+version: '3'
+services:
+  redis:
+    hostname: redis
+    image: redis
+    restart: always
+    volumes:
+     - ./volumenes/redis-data:/data
+    networks:
+       red-uno:
+  redis-commander:
+    image: tenstartups/redis-commander
+    restart: always
+    command: --redis-host redis
+    links:
+     - redis:redis
+    depends_on:
+     - redis
+    environment:
+     - REDIS_HOSTS=local:redis:6379
+    ports:
+     - 0.0.0.0:3002:8081
+    networks:
+       red-uno:
+  mongo:
+       image: mongo
+       hostname: mongo
+       volumes:
+        - ./volumenes/mongo-data:/data/db/
+        - ./volumenes/mongo-log:/var/log
+       networks:
+          red-dos:
+  mongoexpress:
+       image: mongo-express
+       hostname: mongoexpress
+       ports:
+        - 0.0.0.0:3004:8081
+       depends_on:
+        - mongo
+       links:
+        - mongo:mongo
+       networks:
+           red-dos:
+           
+  node8:
+    build: ./
+    ports:
+     - "0.0.0.0:3000:3000"
+    volumes:
+      - ./volumenes/node-data:/usr/src/app/public
+    networks:
+       red-dos:
+       red-uno:
+networks:
+  red-uno:
+    external: true
+  red-dos:
+    external: true

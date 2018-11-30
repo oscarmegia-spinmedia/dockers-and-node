@@ -1,0 +1,19 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    restart: always
+    volumes:
+     - /home/elecciones/rabbitmq-data:/var/lib/rabbitmq
+    ports:
+     - 0.0.0.0:15672:15672
+     - 0.0.0.0:5672:5672
+    networks:
+        red-uno:
+networks:
+  red-uno:
+    external: true
+  red-dos:
+    external: true
+

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  redis:
+    hostname: redis
+    image: redis
+    restart: always
+    volumes:
+     - /home/elecciones/redis-data:/data
+    ports:
+     - 0.0.0.0:6379:6379
+    networks:
+       red-uno:
+  redis-commander:
+    image: tenstartups/redis-commander
+    restart: always
+    command: --redis-host redis
+    links:
+     - redis:redis
+    depends_on:
+     - redis
+    environment:
+     - REDIS_HOSTS=local:redis:6379
+    ports:
+     - 0.0.0.0:8081:8081
+    networks:
+       red-uno:
+networks:
+  red-uno:
+    external: true

@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mongo:
+       image: mongo
+       hostname: mongo
+       restart: always
+       ports:
+        - 0.0.0.0:27017:27017
+       volumes:
+        - /home/elecciones/mongo-data:/data/db/
+        - /home/elecciones/mongo-log:/var/log
+       networks:
+          red-dos:
+  mongoexpress:
+       image: mongo-express
+       hostname: mongoexpress
+       restart: always
+       ports:
+        - 0.0.0.0:8091:8081
+       depends_on:
+        - mongo
+       links:
+        - mongo:mongo
+       networks:
+           red-dos:
+networks:
+  red-dos:
+    external: true

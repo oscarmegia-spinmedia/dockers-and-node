@@ -1,0 +1,14 @@
+version: '3'
+services:
+# .env aut=root@indra$1
+  sftp_oscar:
+        image: "atmoz/sftp"
+        volumes:
+          - /home/elecciones/recibido:/home/spinmedia/recibido
+        ports:
+          - 0.0.0.0:2222:22
+        networks:
+          red-uno:
+        command: spinmedia:spin@1234
+networks:
+  red-uno:

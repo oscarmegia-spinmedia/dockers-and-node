@@ -1,0 +1,71 @@
+version: '3'
+services:
+  redis:
+    hostname: redis
+    image: redis
+    volumes:
+     - ./volumenes/redis-data:/data
+    
+    networks:
+       app-network:
+  redis-commander:
+    image: tenstartups/redis-commander
+    command: --redis-host redis
+    links:
+     - redis:redis
+    depends_on:
+     - redis
+    environment:
+     - REDIS_HOSTS=local:redis:6379
+     - INSTANCE=redis-commander
+    ports:
+     - 8081
+    networks:
+       app-network:
+  mongo:
+       image: mongo
+       hostname: mongo 
+       volumes:
+        - ./volumenes/mongo-data:/data/db/
+        - ./volumenes/mongo-log:/var/log
+       networks:
+          app-network:
+  mongoexpress:
+       image: mongo-express
+       hostname: mongoexpress
+       ports:
+        - 3001:8081
+       depends_on:
+        - mongo
+       links:
+        - mongo:mongo
+       networks:
+          app-network:
+           
+  node1:
+    hostname: api-node
+    build: ./
+    ports:
+     - 3000
+    volumes:
+      - ./volumenes/node-data:/usr/src/app/public
+    environment:
+      - INSTANCE=node1
+    networks:
+      app-network:
+  nginx:
+      build:
+        context: .
+        dockerfile: .docker/nginx.dockerfile
+      depends_on:
+        - node1
+      links:
+        - node1:node1
+        - redis-commander:redis-commander
+      ports:
+        - 80:80
+      networks:
+        app-network:
+networks:
+  app-network:
+    driver: bridge
