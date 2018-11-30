@@ -1,0 +1,28 @@
+version: '3'
+services:
+  nodesingle:
+    hostname: node
+    build: ./
+    ports:
+     - 3010:3010
+    volumes:
+      - ./volumenes/node-data:/usr/src/app/public
+    environment:
+      - INSTANCE=nodesingle
+    networks:
+      app-network:
+  nginx:
+      build:
+        context: .
+        dockerfile: .docker/nginx.dockerfile
+      depends_on:
+        - nodesingle
+      links:
+        - nodesingle:nodesingle
+      ports:
+        - 8100:80
+      networks:
+        app-network:
+networks:
+  app-network:
+    driver: bridge
